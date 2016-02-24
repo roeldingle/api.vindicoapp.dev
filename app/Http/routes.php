@@ -19,33 +19,6 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-Route::get('api/v1', ['before' => 'oauth', function() {
- 	// return the protected resource
- 	//echo “success authentication”;
- 	$user_id=Authorizer::getResourceOwnerId(); // the token user_id
- 	$user=\App\User::find($user_id);// get the user data from database
-
-	return Response::json($user);
-}]);
-
-Route::group(['prefix' => 'api/v1/auth'], function() {
-
-    Route::get('test', ['before' => 'oauth'], 'LoginController@index');
-
-
-    /*provide access_token*
-	Route::post('access_token', function() {
-	 return Response::json(Authorizer::issueAccessToken());
-	});
-
-});
-
-Route::get('/register',function(){$user = new App\User();
-	$user->name="test user2";
-	$user->email="test2@test.com";
-	$user->password = \Illuminate\Support\Facades\Hash::make("password2");
-	$user->save();
-});
 
 */
 
@@ -90,7 +63,38 @@ Route::group(['prefix' => 'api'], function(){
 });
 
 
+/*docs*/
 
+Route::group(['prefix' => 'docs/v1'], function(){
+
+  Route::get('/', ['as' => 'doc.v1.index', function(){
+
+    return View::make('docs.v1.index');
+    //return "dfdf";
+
+  }]);
+
+  Route::get('installation', ['as' => 'doc.v1.installation', function(){
+
+    return View::make('docs.v1.installation');
+
+  }]);
+
+  Route::get('register', ['as' => 'doc.v1.register', function(){
+
+    return View::make('docs.v1.register');
+
+  }]);
+
+  Route::get('authentication', ['as' => 'doc.v1.authentication', function(){
+
+    return View::make('docs.v1.authentication');
+
+  }]);
+
+ 
+
+});
 
 
 

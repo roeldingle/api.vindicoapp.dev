@@ -135,6 +135,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+		'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -146,6 +147,7 @@ return [
 		'App\Providers\RouteServiceProvider',
 		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
 		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		
 
 	],
 
@@ -196,6 +198,8 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 		'Authorizer' => 'LucaDegasperi\OAuth2Server\Facades\AuthorizerFacade',
 		'Input' => 'Illuminate\Support\Facades\Input::class',
+		'Html5' => 'Illuminate\Html\HtmlFacade',
+		'Form' => 'Illuminate\Html\FormFacade',
 
 	],
 

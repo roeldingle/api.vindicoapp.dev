@@ -1,0 +1,51 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+.navbar-red{
+  background-color: #F22613;
+  border-color:transparent;
+  box-shadow: 0px 1px 9px 1px;
+}
+
+.navbar-red a {
+  color:#FFF;
+}
+
+.navbar-red a:hover {
+  color:#ddd;
+}
+
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  z-index: 2;
+  color: #ffffff;
+  background-color: #F22613;
+  border-color: #F22613;
+}
+
+a{
+  color: #F22613;
+}
+
+a:hover, a:focus{
+  color: #CF000F;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
