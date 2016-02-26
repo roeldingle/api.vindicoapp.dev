@@ -14,7 +14,7 @@ use LucaDegasperi\OAuth2Server\Authorizer;
 class AuthController extends Controller {
 
 	/**
-	 * 
+	 * access_token
 	 *
 	 * @return Response
 	 */
@@ -27,7 +27,7 @@ class AuthController extends Controller {
 
  	    $aReturnData = array(
  	    		'message' => "See sample data",
- 	    		'data' => $user,
+ 	    		'data' => $aUser,
  	    		'all' =>  $aUserData 
  	    	);
 

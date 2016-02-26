@@ -29,6 +29,7 @@ Route::group(['prefix' => 'api'], function(){
 
 		Route::group(['prefix' => 'auth', 'before' => ''], function(){
 
+
 			/*test request data*/
 			Route::get('sample_data',[
 			  'before' => 'oauth',
@@ -36,6 +37,8 @@ Route::group(['prefix' => 'api'], function(){
 		      'uses'  => 'AuthController@sample_data'
 		    ]);
 
+
+			/******************AuthController*********************/
 		    /*post login*/
 			Route::post('login',[
 			   'as'    => 'api.v1.auth.login',
@@ -53,6 +56,43 @@ Route::group(['prefix' => 'api'], function(){
 			   'as'    => 'api.v1.auth.register',
 		       'uses'  => 'AuthController@postRegister'
 			]);
+
+
+			/******************SearchController*********************/
+			/*get search*/
+			Route::get('search',[
+			   'before' => 'oauth',
+			   'as'    => 'api.v1.auth.search',
+		       'uses'  => 'SearchController@getSearch'
+			]);
+
+
+			/******************ReportsController*********************/
+			Route::get('reports',[
+		      'before' => 'oauth',
+			  'as'    => 'api.v1.auth.reports',
+			  'uses'  => 'ReportsController@index'
+		     ]);
+
+			Route::get('reports/create',[
+		      'before' => 'oauth',
+			  'as'    => 'api.v1.auth.reports.create',
+			  'uses'  => 'ReportsController@create'
+		     ]);
+
+			Route::get('reports/{reports}',[
+		      'before' => 'oauth',
+			  'as'    => 'api.v1.auth.reports.{reports}',
+			  'uses'  => 'ReportsController@show'
+		     ]);
+
+			Route::get('reports-search',[
+		      'before' => 'oauth',
+			  'as'    => 'api.v1.auth.reports.getSearch',
+			  'uses'  => 'ReportsController@getSearch'
+		     ]);
+
+
 
 
 
