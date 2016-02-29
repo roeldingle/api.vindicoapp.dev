@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use DB;
-use \App\User as User;
+use \App\User;
 use App\Helpers\Helper as Helper;
 use Response;
 use LucaDegasperi\OAuth2Server\Authorizer;
@@ -45,16 +45,19 @@ class ReportsController extends Controller {
 		$bSearchGroup = Helper::checkDataExist($aSearchGroup);
 
 
-		if($bBrandId && $bLocationId && $bAreaId && $bSearchGroup){
-			
+		//if($bBrandId && $bLocationId && $bAreaId && $bSearchGroup){
+		if($bSearchGroup){
+
 			$aFieldId = explode(',',$aSearchGroup);
 
-			if(is_array($aFieldId)){
+			$aGroups = DB::table('groups')->where('id', $aFieldId);
+
+			if(is_array($aGroups)){
 
 				$aReturnData = array(
 	 	    		'message' => "array",
 	 	    		"data" => array(
-	 	    				"search-list" => User::find($aFieldId),
+	 	    				"search-list" => $aGroups,
 	 	    				"search-ave" => ""
 	 	    			)
 	 	    	);
@@ -79,6 +82,8 @@ class ReportsController extends Controller {
 
 		return $aReturn;
 	}
+
+	
 
 
 

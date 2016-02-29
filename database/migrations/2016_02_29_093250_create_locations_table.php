@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSubgroupTable extends Migration {
+class CreateLocationsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,10 +12,9 @@ class CreateSubgroupTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('subgroups', function(Blueprint $table){
+		Schema::create('locations', function(Blueprint $table){
 			$table->increments('id');
-			$table->string('group_id');
-			$table->string('subgroup_name');
+			$table->string('location_name');
 			$table->timestamps();
 		});
 	}
@@ -28,7 +27,7 @@ class CreateSubgroupTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('subgroups');
+		Schema::drop('locations');
 	}
 
 }

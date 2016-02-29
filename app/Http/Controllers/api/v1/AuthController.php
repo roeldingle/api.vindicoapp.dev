@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-use \App\User as User;
 use DB;
+use \App\User;
 use Response;
 use LucaDegasperi\OAuth2Server\Authorizer;
 
