@@ -63,56 +63,74 @@ class SearchController extends Controller {
 	
 	}
 
-		public function insertItemsValues(){
+	public function insertItemsValues(){
 
-		$sTable = 'items2';
+		
+		$sTable = 'item_value_source';
 		$aItems2 = DB::table($sTable)->get();
-		
+		$aPreparedDataResult = array();
+		$aPreparedData = array();
+		$aItemSubgroupDataResult = array();
+		$atest = array();
 
-		$aItem = array();
-		$aItemMain = array();
-		
-		foreach ($aItems2 as $key=>$Items2){
+		/*get sub group*/
+		$aItemsSubGroup = DB::table('subgroups')->select('id','subgroup_name')->get();
+		//foreach($aItemsSubGroup as $b){
+			//array_push($aItemSubgroupDataResult,str_replace(" ","",$b->subgroup_name));
+		//}
 
-			unset($Items2->id);
-			unset($Items2->location);
-			unset($Items2->brand);
-			unset($Items2->area);
+		foreach($aItems2 as $key1=>$aItem3){
 
-			
-			//echo $Items2->col_16;
+			foreach($aItem3 as $key2=>$aItem4){
 
-			foreach($Items2 as $Items3){
+				foreach($aItemsSubGroup as $key3=>$val){
 
-				array_push($aItem, $Items3);
+					if($key2 == $val->id){
+						
+						$aPreparedData['subgroup_id'] = $key3+1;
+						$aPreparedData['value'] = $aItem4;
+
+						array_push($aPreparedDataResult,array('item_id' => $aItem3->id,'subgroup_id' => $key3+1,'value' => $aItem4));
+
+					}
+				}
+
 			}
 
-			//$iLocationId = DB::table('locations')->select('id')->where('location_name', $sLocation)->pluck('id');
-			//$iBrandId = DB::table('brands')->select('id')->where('brand_name', $sBrand)->pluck('id');
-
-			//$aPrepareItem = array(
-				//	'location_id' => $iLocationId,
-				//	'brand_id' => $iBrandId,
-				//	'area' => str_replace(",", "", $Items2->area)
-				//);
-
-			//str_replace('"', 'in', $Items2->col_16)
-
-			$aPrepareItem = array(
-					'area' => str_replace("\"", "in", $Items2->col_16)
-				);
-
-			array_push($aItemMain, $aPrepareItem);
-
-			
-			
-
-			//DB::table('items')->insert($aPrepareItem);
 		}
-		
 
-		return $aItemMain;
+
+		//DB::table('item_value')->insert($aPrepareItem);
+		
+		
+		
 	
+	}
+
+
+	public function searchItems(){
+
+
+		$iTemId = Input::get('item_id');
+		$aGroupIds = explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
+		$aItem = DB::table('items')
+			->select('id','location_id','brand_id','area')
+			->where('id',$iTemId)
+			->get();
+
+		$aItemValues = DB::table('item_value')
+			->select('groups.group_name','subgroups.subgroup_name','item_value.value')
+			->join('subgroups', 'subgroups.id', '=', 'item_value.subgroup_id')
+			->join('groups', 'groups.id', '=', 'subgroups.group_id')
+			->whereIn('groups.id',$aGroupIds)
+			->where('item_id',$iTemId)
+			->get();
+
+		array_push($aItem, $aItemValues);
+
+
+		return $aItem;
+		
 	}
 
 	
