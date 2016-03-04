@@ -13,27 +13,7 @@ use LucaDegasperi\OAuth2Server\Authorizer;
 
 class AuthController extends Controller {
 
-	/**
-	 * access_token
-	 *
-	 * @return Response
-	 */
-	public function sample_data(Authorizer $authorizer)
-	{
-		
-		$iUserId = $authorizer->getResourceOwnerId(); // the token user_id
- 	    $aUser = User::find($iUserId);// get the user data from database
- 	    $aUserData = User::all();
-
- 	    $aReturnData = array(
- 	    		'message' => "See sample data",
- 	    		'data' => $aUser,
- 	    		'all' =>  $aUserData 
- 	    	);
-
-		return Response::json($aReturnData);
-	}
-
+	
 	/**
 	 * @param
 	 * 	username - (test@test.com)
@@ -107,8 +87,6 @@ class AuthController extends Controller {
 
 	}
 
-	
-	
 
 	/**
 	 * @param

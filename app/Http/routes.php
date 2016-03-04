@@ -59,7 +59,7 @@ Route::group(['prefix' => 'api'], function(){
 			/******************SearchController*********************/
 			/*get search*/
 			Route::get('search',[
-			   //'before' => 'oauth',
+			   'before' => 'oauth',
 			   'as'    => 'api.v1.auth.search',
 		       'uses'  => 'SearchController@getSearch'
 			]);
@@ -68,24 +68,8 @@ Route::group(['prefix' => 'api'], function(){
 			Route::get('search-items',[
 			   'before' => 'oauth',
 			   'as'    => 'api.v1.auth.search-items',
-		       'uses'  => 'SearchController@searchItems'
+		       'uses'  => 'SearchController@getSearchItems'
 			]);
-
-			/*get search
-			Route::get('insert-items',[
-			   //'before' => 'oauth',
-			   'as'    => 'api.v1.auth.insert-items',
-		       'uses'  => 'SearchController@insertItems'
-			]);
-			*/
-
-			/*get search
-			Route::get('insert-items-values',[
-			   //'before' => 'oauth',
-			   'as'    => 'api.v1.auth.insert-items-values',
-		       'uses'  => 'SearchController@insertItemsValues'
-			]);
-			*/
 
 
 			/******************ReportsController*********************/
@@ -112,10 +96,6 @@ Route::group(['prefix' => 'api'], function(){
 			  'as'    => 'api.v1.auth.reports.getSearch',
 			  'uses'  => 'ReportsController@getSearch'
 		     ]);
-
-
-
-
 
 		});
 

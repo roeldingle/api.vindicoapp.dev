@@ -15,100 +15,39 @@ class SearchController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
-	 *
+	 * access_token
+	 * search_cat - (string) 'brands, groups, subgroups'
+	 * 
 	 * @return Response
 	 */
 	public function getSearch()
 	{
 
-		$aItems = DB::table('items2')->select('brand')->orderBy('brand','asc')->groupBy('brand')->get();
+		$sSearch = Input::get('search_cat');
+		$aItems = DB::table($sSearch)->get();
 
- 	    $aReturnData = array(
- 	    		'message' => "See sample data",
- 	    		'data' => $aItems 
- 	    	);
+ 	    //$aReturnData = array(
+ 	    	//	'message' => "See sample data",
+ 	    	//	'data' => $aItems 
+ 	    	//);
 
-		return Response::json($aReturnData);
+		//return Response::json($aReturnData);
+		return $aItems;
 	}
 
-	public function insertItems(){
-
-		$sTable = 'items2';
-		$aItems2 = DB::table($sTable)->select('brand','location','area')->get();
-
-		$aItem = array();
-
-		foreach ($aItems2 as $key=>$Items2){
-			$sLocation = $Items2->location;
-			$sBrand = $Items2->brand;
-
-			$sBrand = str_replace("?", "'",$sBrand);
-
-			$iLocationId = DB::table('locations')->select('id')->where('location_name', $sLocation)->pluck('id');
-			$iBrandId = DB::table('brands')->select('id')->where('brand_name', $sBrand)->pluck('id');
-
-			$aPrepareItem = array(
-					'location_id' => $iLocationId,
-					'brand_id' => $iBrandId,
-					'area' => str_replace(",", "", $Items2->area)
-				);
-
-			
-			array_push($aItem, $aPrepareItem);
-
-			DB::table('items')->insert($aPrepareItem);
-		}
-
-		return $aItem;
 	
-	}
 
-	public function insertItemsValues(){
-
-		
-		$sTable = 'item_value_source';
-		$aItems2 = DB::table($sTable)->get();
-		$aPreparedDataResult = array();
-		$aPreparedData = array();
-		$aItemSubgroupDataResult = array();
-		$atest = array();
-
-		/*get sub group*/
-		$aItemsSubGroup = DB::table('subgroups')->select('id','subgroup_name')->get();
-		//foreach($aItemsSubGroup as $b){
-			//array_push($aItemSubgroupDataResult,str_replace(" ","",$b->subgroup_name));
-		//}
-
-		foreach($aItems2 as $key1=>$aItem3){
-
-			foreach($aItem3 as $key2=>$aItem4){
-
-				foreach($aItemsSubGroup as $key3=>$val){
-
-					if($key2 == $val->id){
-						
-						$aPreparedData['subgroup_id'] = $key3+1;
-						$aPreparedData['value'] = $aItem4;
-
-						array_push($aPreparedDataResult,array('item_id' => $aItem3->id,'subgroup_id' => $key3+1,'value' => $aItem4));
-
-					}
-				}
-
-			}
-
-		}
-
-
-		//DB::table('item_value')->insert($aPrepareItem);
-		
-		
-		
-	
-	}
-
-
-	public function searchItems(){
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * access_token
+	 * item_id - (int) 1
+	 * group_ids - (string) '[1,2,5]'
+	 * 
+	 * 
+	 * @return Response
+	 */
+	public function getSearchItems(){
 
 
 		$iTemId = Input::get('item_id');
@@ -127,7 +66,6 @@ class SearchController extends Controller {
 			->get();
 
 		array_push($aItem, $aItemValues);
-
 
 		return $aItem;
 		

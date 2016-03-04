@@ -15,73 +15,90 @@ use LucaDegasperi\OAuth2Server\Authorizer;
 
 class ReportsController extends Controller {
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param 
-	 * access_token (string) -> random string as authentication
-	 * brand_id
-	 * location_id
-	 * area_range_id
-	 * group_ids (array) -> array of group fields ids searched
-	 *
-	 *
-	 *
-	 * @return Response
-	 */
-	public function getSearch()
-	{
-
-		/*set req variables*/
-		$iBrandId = Input::get('brand_id');
-		$iLocationId = Input::get('location_id');
-		$iAreaId = Input::get('area_range_id');
-		$aSearchGroup = Input::get('group_ids');
-
-		/*check if req var are set*/
-		$bBrandId = Helper::checkDataExist($iBrandId);
-		$bLocationId = Helper::checkDataExist($iLocationId);
-		$bAreaId = Helper::checkDataExist($iAreaId);
-		$bSearchGroup = Helper::checkDataExist($aSearchGroup);
+	public function index(){
+		echo "test";
+	}
 
 
-		//if($bBrandId && $bLocationId && $bAreaId && $bSearchGroup){
-		if($bSearchGroup){
+	/*
 
-			$aFieldId = explode(',',$aSearchGroup);
+	public function insertItems(){
 
-			$aGroups = DB::table('groups')->where('id', $aFieldId);
+		$sTable = 'items2';
+		$aItems2 = DB::table($sTable)->select('brand','location','area')->get();
 
-			if(is_array($aGroups)){
+		$aItem = array();
 
-				$aReturnData = array(
-	 	    		'message' => "array",
-	 	    		"data" => array(
-	 	    				"search-list" => $aGroups,
-	 	    				"search-ave" => ""
-	 	    			)
-	 	    	);
+		foreach ($aItems2 as $key=>$Items2){
+			$sLocation = $Items2->location;
+			$sBrand = $Items2->brand;
 
-				$aReturn = Response::json($aReturnData,200);
-			}else{
+			$sBrand = str_replace("?", "'",$sBrand);
 
-				$aReturnData = array(
-	 	    		'message' => "not array"
-	 	    	);
+			$iLocationId = DB::table('locations')->select('id')->where('location_name', $sLocation)->pluck('id');
+			$iBrandId = DB::table('brands')->select('id')->where('brand_name', $sBrand)->pluck('id');
 
-				$aReturn = Response::json($aReturnData,204);
-			}
+			$aPrepareItem = array(
+					'location_id' => $iLocationId,
+					'brand_id' => $iBrandId,
+					'area' => str_replace(",", "", $Items2->area)
+				);
 
-		}else{
-			$aReturnData = array(
- 	    		'message' => "not array"
- 	    	);
+			
+			array_push($aItem, $aPrepareItem);
 
-			$aReturn = Response::json($aReturnData,400);
+			DB::table('items')->insert($aPrepareItem);
 		}
 
-		return $aReturn;
+		return $aItem;
+	
 	}
+
+	public function insertItemsValues(){
+
+		
+		$sTable = 'item_value_source';
+		$aItems2 = DB::table($sTable)->get();
+		$aPreparedDataResult = array();
+		$aPreparedData = array();
+		$aItemSubgroupDataResult = array();
+		$atest = array();
+
+		/*get sub group*
+		$aItemsSubGroup = DB::table('subgroups')->select('id','subgroup_name')->get();
+		//foreach($aItemsSubGroup as $b){
+			//array_push($aItemSubgroupDataResult,str_replace(" ","",$b->subgroup_name));
+		//}
+
+		foreach($aItems2 as $key1=>$aItem3){
+
+			foreach($aItem3 as $key2=>$aItem4){
+
+				foreach($aItemsSubGroup as $key3=>$val){
+
+					if($key2 == $val->id){
+						
+						$aPreparedData['subgroup_id'] = $key3+1;
+						$aPreparedData['value'] = $aItem4;
+
+						array_push($aPreparedDataResult,array('item_id' => $aItem3->id,'subgroup_id' => $key3+1,'value' => $aItem4));
+
+					}
+				}
+
+			}
+
+		}
+
+
+		//DB::table('item_value')->insert($aPrepareItem);
+		
+		
+		
+	
+	}
+
+	*/
 
 	
 
