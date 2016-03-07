@@ -22,32 +22,6 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
-/* Admin Routes */
-Route::group([
-	'prefix' 		=> 'admin',
-	//'as' 			=> 'admin',
-	'middleware' 	=> ['auth', 'App\Http\Middleware\AdminMiddleware']
-], function () {
-	/*resource('/', 'Admin\UserController');
-	resource('/user', 'Admin\UserController');*/
-	
-	Route::get('/', ['as' => 'admin', 'uses' => 'Admin\UserController@index']);
-	Route::get('/users','Admin\UserController@index');
-
-    Route::group([
-		'prefix' 		=> 'user',
-		//'as'			=> 'user'
-		], function () {
-		Route::get('/', ['as' => 'user', 'uses' => 'Admin\UserController@index']);
-		Route::get('/create','Admin\UserController@create');
-		Route::post('/create','Admin\UserController@store');
-
-		Route::get('/edit/{id}','Admin\UserController@edit');
-		Route::post('/edit/{id}','Admin\UserController@update');	
-		Route::get('/delete/{id}','Admin\UserController@destroy');			    
-	});	
-
-});
 
 
 
@@ -63,7 +37,7 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 			return [];
 		}); /* defaultview */
 
-		Route::get('search','SearchController@getSearch');
+		
 
 		Route::group(['prefix'=>'auth'],function(){
 
@@ -113,14 +87,13 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 		    ]);
 
 		});
+	
 
+		/************************** Search Controller *******************************/
 		Route::group(['middleware' => 'api.access'],function(){
 		  
-
-		    Route::resource('checkout','CheckoutController',
-		      ['only' =>['index']]
-		    );
-
+		    Route::get('search','SearchController@getSearch');
+		    Route::get('search-item','SearchController@getSearchItems');
 
 		});
 

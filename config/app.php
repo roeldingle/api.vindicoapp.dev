@@ -79,6 +79,7 @@ return [
 	*/
 
 	'key' => env('APP_KEY', 'SomeRandomString'),
+	'expiration'	=> env('EXPIRATION', 3),
 
 	'cipher' => MCRYPT_RIJNDAEL_128,
 

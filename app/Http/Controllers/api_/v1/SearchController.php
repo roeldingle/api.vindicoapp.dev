@@ -7,11 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input as Input;
 
 use \App\User as User;
-//use Illuminate\Support\Facades\Input;
-//use Input;
 use DB;
 use Response;
-//use LucaDegasperi\OAuth2Server\Authorizer;
 
 class SearchController extends Controller {
 
@@ -27,9 +24,6 @@ class SearchController extends Controller {
 	{
 
 		$sSearch = Input::get('search_category');
-
-		//dd($sSearch);
-
 
 		if(null !== $sSearchSpecific = Input::get('search_specific')){
 
@@ -60,7 +54,6 @@ class SearchController extends Controller {
 
 		return Response::json($aReturnData,$iStatusCode);
 
-
 	}
 
 	
@@ -79,7 +72,7 @@ class SearchController extends Controller {
 
 
 		$iTemId = Input::get('item_id');
-		$aGroupIds = explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
+		$aGroupIds = json_decode(Input::get('group_ids'));//explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
 		$aItem = DB::table('items')
 			->select('id','location_id','brand_id','area')
 			->where('id',$iTemId)
