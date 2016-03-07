@@ -4,20 +4,16 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Input as Input;
 
 use \App\User as User;
+//use Illuminate\Support\Facades\Input;
+//use Input;
 use DB;
 use Response;
 //use LucaDegasperi\OAuth2Server\Authorizer;
 
 class SearchController extends Controller {
-
-
-	public function index()
-	{
-		
-	}
 
 	/**
 	 * Display a listing of the resource.
@@ -32,9 +28,10 @@ class SearchController extends Controller {
 
 		$sSearch = Input::get('search_category');
 
+		//dd($sSearch);
+
 
 		if(null !== $sSearchSpecific = Input::get('search_specific')){
-			;
 
 			if($aItems = DB::table($sSearch)->select($sSearchSpecific)->get()){
 				$sMessage = "Search success";
@@ -45,15 +42,15 @@ class SearchController extends Controller {
 			}
 
 		}else{
-			$aItems = DB::table($sSearch)->get();
 
-			if($sSearchSpecific){
+			if($aItems = DB::table($sSearch)->get()){
 				$sMessage = "Search success";
 				$iStatusCode = 200;
 			}else{
 				$sMessage = "Please check search parameter";
 				$iStatusCode = 400;
 			}
+
 		}
 		
  	    $aReturnData = array(

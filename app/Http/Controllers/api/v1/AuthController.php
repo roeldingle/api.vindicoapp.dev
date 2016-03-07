@@ -1,132 +1,138 @@
 <?php namespace App\Http\Controllers\api\v1;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\BaseApiController;
+use App\Straightarrow\Modules\Auth\AuthGateway;
+use App\Straightarrow\Modules\Auth\AuthValidation;
+use Response, Request;
+//use Input;
 use Illuminate\Support\Facades\Input;
+use Hash;
+use Mail;
 
-use DB;
-use \App\User;
-use Response;
-use LucaDegasperi\OAuth2Server\Authorizer;
+class AuthController extends BaseApiController
+{
 
-class AuthController extends Controller {
-
-	
-	/**
-	 * @param
-	 * 	username - (test@test.com)
-	 * 	password -> (password)
-	 * 	grant_type -> (password)
-	 * 	client_id -> issued when you created your app
-	 * 	client_secret -> issued when you created your app
-	 *
-	 * @return Response
-	 */
-	public function login(Authorizer $authorizer)
-	{
-
-		$bLogin = !empty($authorizer->issueAccessToken()) ? true : false;
-
-		if($bLogin){
-
-			$aReturnData = array(
- 	    		'message' => "Loggin successful",
- 	    		'data' => $authorizer->issueAccessToken()
- 	    	);
-
-			$aReturn = Response::json($aReturnData,200);
-		}else{ /*second level error catch, outh2 will validate first*/
-
-			$aReturnData = array(
- 	    		'message' => "Error login",
- 	    		'data' => ""
- 	    	);
-
-			$aReturn = Response::json($aReturnData,500);
-		}
-
-		return $aReturn;
-	}
+  protected $authGateway;
+  protected $validator;
 
 
-	/**
-	 * @param
-	 * 	access_token
-	 *
-	 * @return Response
-	 */
-	public function logout(Authorizer $authorizer)
-	{
-		/*get access_token*/
-		$sAccessToken = Input::get('access_token');
+  public function __construct(AuthGateway $authGateway, AuthValidation $validator)
+  {
+    $this->authGateway = $authGateway;
+    $this->validator = $validator;
+  }
 
-		/*delete access_token*/
-		$bDeleted = DB::table('oauth_access_tokens')->where('id', $sAccessToken)->delete();
-
-		if($bDeleted){
-
-			$aReturnData = array(
- 	    		'message' => "Logout successful",
- 	    		'data' => ""
- 	    	);
-
-			$aReturn = Response::json($aReturnData,200);
-		}else{
-
-			$aReturnData = array(
- 	    		'message' => "Error logout",
- 	    		'data' => ""
- 	    	);
-
-			$aReturn = Response::json($aReturnData,500);
-		}
-
-		return $aReturn;
-
-	}
+  /**
+   * Authenticate the requesting client
+   * POST /api/{api_version}/auth/login
+   * @return json
+   */
+  public function postAuthenticate()
+  {
+    //$validator = $this->validator->test(Input::all());
+    
+    $isAuthenticated = $this->authGateway->login(Input::all());
+    if($isAuthenticated['valid']){
+      $response = ['status' => $isAuthenticated['valid'] ,'token' => $isAuthenticated['token']];
+      return Response::json($response, 200);
+    }else{
+      //check if there's a validation errors else the credentials is invalid
+      $response = ['status' => $isAuthenticated['valid'] ,'error' => $isAuthenticated['error']];
+      return Response::json($response, 422);
+    }
+  }
 
 
-	/**
-	 * @param
-	 * 	name 
-	 * 	email
-	 * 	password
-	 *
-	 * @return Response
-	 */
-	public function postRegister()
-	{
+  /**
+   * Forgot password - Sends email to the user with its new password
+   * [GET] /api/{api_version}/auth/forgot
+   * @return json
+   */
+  public function postForgot(){
 
-		$user = new User();
-		$user->name = Input::get('name');
-		$user->email = Input::get('email');
-		$user->password = \Illuminate\Support\Facades\Hash::make(Input::get('password'));
+    $email = Input::get('email');
 
-		$bRegistered = $user->save();
+    $validator = $this->validator->isValidEmail(Input::all());
 
-		if($bRegistered){
+    if(!$validator) {
+      $errors = $this->validator->errors()->first();
+      return Response::json(['status'=>$validator,'error'=>$errors], 422);
+    }
 
-			$aReturnData = array(
- 	    		'message' => "Registered successful",
- 	    		'data' => Input::all()
- 	    	);
-
-			$aReturn = Response::json($aReturnData,201);
-		}else{
-
-			$aReturnData = array(
- 	    		'message' => "Error register",
- 	    		'data' => Input::all()
- 	    	);
-
-			$aReturn = Response::json($aReturnData,500);
-		}
-
-		return $aReturn;
+    $pwd = bin2hex(openssl_random_pseudo_bytes(4));
 
 
-	}
+    $status = $this->authGateway->changepassword(['email'=>$email,'password'=>$pwd]);
+
+    if(!$status['valid']) {
+      return Response::json(['status'=>false,'error'=>$status['error']], 422);
+    }
+    
+
+
+    $html = '
+    <table cellpadding="0" cellspacing="0" width="600" border="0">
+     <tr>
+      <td style="font-size:14px;">
+        <font face="arial">Here\'s your new password.<br>
+        <strong>'.$pwd.'</strong>
+        </font>
+      </td>
+     </tr>
+    </table>
+
+    ';
+
+    Mail::send([], ['html'=>$html], function ($message) use($html) {
+        $message->from('web2sign@yahoo.com', 'Roy Vincent Niepes');
+        $message->to('web2sign@gmail.com')->subject('Here\'s your New Password');
+        $message->setBody($html,'text/html');
+    });
+
+
+    return Response::json(['status'=>true,'message'=>'Your new password has been sent.'], 200);
+
+  }
+
+
+  /**
+   * Logs out the client
+   * [GET] /api/{api_version}/auth/logout
+   * @return json
+   */
+  public function getLogout()
+  {
+    $token = Request::header('X-Auth-Token');
+
+
+    
+    $isLoggedOut = $this->authGateway->logout($token);
+
+    if($isLoggedOut['valid']){
+      $response = ['status' => $isLoggedOut['valid'], 'message' => $isLoggedOut['message']];
+      return Response::json($response, 200);
+    }else{
+       $response = ['status' => $isLoggedOut['valid'],'error' => $isLoggedOut['error']];
+      return Response::json($response, 401);
+    }
+  }
+
+  /**
+   * Register the client
+   * [POST] /api/{api_version}/auth/register
+   * @return array
+   */
+  public function postRegister()
+  {
+    $isRegistered = $this->authGateway->register(Input::all());
+    if($isRegistered['valid']){
+      $response = ['status' => true, 'token' => $isRegistered['token']];
+      return Response::json($response, 201);
+
+    }else{
+      $response = ['status' => false, 'error' => $isRegistered['error']];
+      return Response::json($response, 422);
+    }
+  }
 
 }

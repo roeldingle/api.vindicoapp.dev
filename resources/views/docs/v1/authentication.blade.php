@@ -14,16 +14,16 @@
 
   <ol>
 
-    <li><a href="{{ URL::route('doc.v1.authentication'). '#login' }}">[POST] Login with facebook</a></li>
+    <li><a href="{{ URL::route('doc.v1.authentication'). '#login' }}">[POST] Login</a></li>
     <li><a href="{{ URL::route('doc.v1.authentication'). '#logout' }}">[GET] Logout</a></li>
 
   </ol>
 
-  <h4 id="login">1. <b>Login with facebook. </b></h4>
+  <h4 id="login">1. <b>Login</b></h4>
 
   <h4>Resource URL</h4>
   <code>
-    http://api.straightarrowasset.com/valedate/api/v1/auth/login
+    http://api.straightarrowasset.com/vindicoapp/api/v1/auth/login
   </code>
 
   <h4>Resource Information</h4>
@@ -43,253 +43,93 @@
   <h4>Parameters</h4>
   <table class="table table-hovered table-striped">
 
-    <tr>
-      <td>
-        facebook_id
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        Integer
-        <p>
-          <b>Example Values : </b> 10153049638771855
-        </p>
-      </td>
-    </tr>
 
 
     <tr>
       <td>
-        email
+        username / email
         <span class="text-muted">required</span>
       </td>
       <td>
         String
         <p>
-          <b>Example Values : </b> ann@straightarrow.com.ph
+          <b>Example Values : </b> testuser / test@test.com
         </p>
       </td>
     </tr>
 
     <tr>
       <td>
-        about_me
-        <span class="text-muted">optional</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> My name is Ann Smith. I am a senior in high school. Everyone can agree that I am a good student and that I like to study. My favorite subjects are chemistry and biology. I am going to enter the university because my goal is to study these subjects in future and to become a respected professional in one of the fields. 
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        gender
+        password
         <span class="text-muted">required</span>
       </td>
       <td>
         String
         <p>
-          <b>Example Values : </b> Female
+          <b>Example Values : </b> password, 123456
         </p>
       </td>
     </tr>
 
     <tr>
       <td>
-        first_name
+        grant_type
         <span class="text-muted">required</span>
       </td>
       <td>
-        String
+        String (system constant)
         <p>
-          <b>Example Values : </b> Ann
+          <b>Value : </b> password
         </p>
       </td>
     </tr>
 
     <tr>
       <td>
-        middle_name
-        <span class="text-muted">optional</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> David
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        last_name
-        <span class="text-muted">optional</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> Smith
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        locale
+        client_id
         <span class="text-muted">required</span>
       </td>
       <td>
-        String
+        String (system constant)
         <p>
-          <b>Example Values : </b> en_US
+          <b>Value : </b> vindicoapp
         </p>
       </td>
     </tr>
 
     <tr>
       <td>
-        timezone
+        client_secret
         <span class="text-muted">required</span>
       </td>
       <td>
-        String
+        String (system constant)
         <p>
-          <b>Example Values : </b> -8
+          <b>Value : </b> password123
         </p>
       </td>
     </tr>
 
-    <tr>
-      <td>
-        date_of_birth
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        Date
-        <p>
-          <b>Example Values : </b> 1990-05-15
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        updated_time
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        Date
-        <p>
-          <b>Example Values : </b> 2015-02-01T15:27:27+0000
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        status
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        boolean
-        <p>
-          <b>Example Values : </b> 1
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        longitude
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> 121.0760663544022
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        latitude
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> 14.58469835111368
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        location
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> Houston, California
-        </p>
-      </td>
-    </tr>
-
-
-    <tr>
-      <td>
-        age
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String
-        <p>
-          <b>Example Values : </b> 24
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        photos[]
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        Array
-        <p>
-          <b>Example Values : </b>
-            <ul>
-                  <li>
-                    photos[0] = images/photos01.jpg
-                  </li>
-                  <li>
-                    photos[1] = images/photos02.jpg
-                  </li>
-                  <li>
-                    photos[2] = images/photos03.jpg
-                  </li>
-              </ul>
-        </p>
-      </td>
-    </tr>
+    
 
   </table>
 
   <h4>Example Request</h4>
 
   <code>
-    POST http://api.straightarrowasset.com/valedate/api/v1/auth/login
+    POST http://api.straightarrowasset.com/vindicoapp/api/v1/auth/login
   </code>
 
   <h5>Example Response</h5>
   <pre>
     {
       "is_logged_in": true,
-      "token": "MC42NzI0ODEwMCAxNDE3NjY3NTE5LTIzNy1JWE5lWWdGejMyejFLa0dtb0FiOHNIVlViZ0hpcmRQSg=="
+      "message": "Loggin successful",
+      "data": {
+        "access_token": "Kvxlic009mcpqLQtjSE1YlUcgDP5YQFffLOkC549",
+        "token_type": "Bearer",
+        "expires_in": 604800
+      }
     }
   </pre>
 
@@ -308,7 +148,7 @@
 
   <h4>Resource URL</h4>
   <code>
-    http://api.straightarrowasset.com/valedate/api/v1/auth/logout
+    http://api.straightarrowasset.com/vindicoapp/api/v1/auth/logout
   </code>
 
   <h4>Resource Information</h4>
@@ -327,14 +167,14 @@
 
   <h4>Example Request</h4>
   <code>
-    GET http://api.straightarrowasset.com/valedate/api/v1/auth/logout
+    GET http://api.straightarrowasset.com/vindicoapp/api/v1/auth/logout
   </code>
 
   <h5>Example Response</h5>
   <pre>
     {
       "is_logged_out": true,
-      "data": "You have successfully logged out into the system"
+      "message": "Logout successful"
     }
   </pre>
 

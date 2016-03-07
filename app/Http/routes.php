@@ -9,134 +9,143 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
+*/
+
+#Route::get('/', 'WelcomeController@index');
 
 Route::get('/', 'WelcomeController@index');
 
-Route::get('home', 'HomeController@index');
+Route::any('auth/register','WelcomeController@index');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
-*/
+
+/* Admin Routes */
+Route::group([
+	'prefix' 		=> 'admin',
+	//'as' 			=> 'admin',
+	'middleware' 	=> ['auth', 'App\Http\Middleware\AdminMiddleware']
+], function () {
+	/*resource('/', 'Admin\UserController');
+	resource('/user', 'Admin\UserController');*/
+	
+	Route::get('/', ['as' => 'admin', 'uses' => 'Admin\UserController@index']);
+	Route::get('/users','Admin\UserController@index');
+
+    Route::group([
+		'prefix' 		=> 'user',
+		//'as'			=> 'user'
+		], function () {
+		Route::get('/', ['as' => 'user', 'uses' => 'Admin\UserController@index']);
+		Route::get('/create','Admin\UserController@create');
+		Route::post('/create','Admin\UserController@store');
+
+		Route::get('/edit/{id}','Admin\UserController@edit');
+		Route::post('/edit/{id}','Admin\UserController@update');	
+		Route::get('/delete/{id}','Admin\UserController@destroy');			    
+	});	
+
+});
 
 
-Route::group(['prefix' => 'api'], function(){
 
-	Route::group(['prefix' => 'v1', 'namespace' => 'api\v1'],function(){
+Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 
-		Route::group(['prefix' => 'auth', 'before' => ''], function(){
+	Route::get('/',function(){
+		return [];
+	}); /* defaultview */
 
+	Route::group(['prefix'=>'v1'],function(){
 
-			/*test request data*/
-			Route::get('sample_data',[
-			  'before' => 'oauth',
-			  'as'    => 'api.v1.auth.sample_data',
-		      'uses'  => 'AuthController@sample_data'
+		Route::get('/',function(){
+			return [];
+		}); /* defaultview */
+
+		Route::get('search','SearchController@getSearch');
+
+		Route::group(['prefix'=>'auth'],function(){
+
+			Route::get('/',function(){
+				return [];
+			}); /* defaultview */
+
+			Route::get('login',function(){
+				return ['email'=>'sample@yahoo.com','password'=>'*****'];
+			});
+			
+		    Route::post('login',[
+			    'as'    => 'api.v1.auth.login',
+			    'uses'  => 'AuthController@postAuthenticate'
+		    ]);
+
+			Route::get('forgot',function(){
+				return ['email'=>'sample@yahoo.com'];
+			}); 
+
+		    Route::post('forgot',[
+			    'as'    => 'api.v1.auth.forgot',
+			    'uses'  => 'AuthController@postForgot'
+		    ]);
+
+		    Route::get('logout',[
+			    'as'    => 'api.v1.auth.logout',
+			    'uses'  => 'AuthController@getLogout'
 		    ]);
 
 
-			/******************AuthController*********************/
-		    /*post login*/
-			Route::post('login',[
-			   'as'    => 'api.v1.auth.login',
-		       'uses'  => 'AuthController@login'
-			]);
+			Route::get('register',function(){
+				return [
+					'email'=>'sample@yahoo.com',
+					'password'=>'*****',
+					'first_name' => 'John',
+					'middle_name' => 'D',
+					'last_name' => 'Doe',
+					'gender' => 1,
+					'about_me' => 'secret'
+				];
+			}); 
 
-			/*get logout*/
-			Route::get('logout',[
-			   'as'    => 'api.v1.auth.logout',
-		       'uses'  => 'AuthController@logout'
-			]);
-
-			/*post register*/
-			Route::post('register',[
-			   'as'    => 'api.v1.auth.register',
-		       'uses'  => 'AuthController@postRegister'
-			]);
-
-
-			/******************SearchController*********************/
-			/*get search*/
-			Route::get('search',[
-			   'before' => 'oauth',
-			   'as'    => 'api.v1.auth.search',
-		       'uses'  => 'SearchController@getSearch'
-			]);
-
-			/*get search items*/
-			Route::get('search-items',[
-			   'before' => 'oauth',
-			   'as'    => 'api.v1.auth.search-items',
-		       'uses'  => 'SearchController@getSearchItems'
-			]);
-
-
-			/******************ReportsController*********************/
-			Route::get('reports',[
-		      'before' => 'oauth',
-			  'as'    => 'api.v1.auth.reports',
-			  'uses'  => 'ReportsController@index'
-		     ]);
-
-			Route::get('reports/create',[
-		      'before' => 'oauth',
-			  'as'    => 'api.v1.auth.reports.create',
-			  'uses'  => 'ReportsController@create'
-		     ]);
-
-			Route::get('reports/{reports}',[
-		      'before' => 'oauth',
-			  'as'    => 'api.v1.auth.reports.{reports}',
-			  'uses'  => 'ReportsController@show'
-		     ]);
-
-			Route::get('reports-search',[
-		      'before' => 'oauth',
-			  'as'    => 'api.v1.auth.reports.getSearch',
-			  'uses'  => 'ReportsController@getSearch'
-		     ]);
+		    Route::post('register',[
+		    	'as' 	=> 'api.v1.auth.register',
+		    	'uses'  => 'AuthController@postRegister'
+		    ]);
 
 		});
+
+		Route::group(['middleware' => 'api.access'],function(){
+		  
+
+		    Route::resource('checkout','CheckoutController',
+		      ['only' =>['index']]
+		    );
+
+
+		});
+
 
 	});
 
 });
 
 
-/*docs*/
+Route::group([
+    'prefix'    =>  'docs'
+],function(){
 
-Route::group(['prefix' => 'docs/v1'], function(){
+    Route::get('/',function(){
+        return '';
+    });
 
-  Route::get('/', ['as' => 'doc.v1.index', function(){
-
-    return View::make('docs.v1.index');
-    //return "dfdf";
-
-  }]);
-
-  Route::get('installation', ['as' => 'doc.v1.installation', function(){
-
-    return View::make('docs.v1.installation');
-
-  }]);
-
-  Route::get('register', ['as' => 'doc.v1.register', function(){
-
-    return View::make('docs.v1.register');
-
-  }]);
-
-  Route::get('authentication', ['as' => 'doc.v1.authentication', function(){
-
-    return View::make('docs.v1.authentication');
-
-  }]);
-
- 
-
+    Route::group([
+        'prefix'    =>  'v1'
+    ],function(){
+        Route::get('/',function(){ return View::make('docs.v1.documentation'); });
+        Route::get('installation',function(){  return View::make('docs.v1.installation'); });
+        Route::get('reference',function(){  return View::make('docs.v1.reference'); });
+        Route::get('profile',function(){  return View::make('docs.v1.profile'); });
+        Route::get('authentication',function(){  return View::make('docs.v1.authentication'); });
+        Route::get('checkout',function(){  return View::make('docs.v1.checkout'); });
+    });
 });
-
-
-
-

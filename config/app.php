@@ -145,10 +145,18 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-		'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
-		'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		//'LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider',
+		//'LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider',
+		//LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
+		//LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
 		
 
+		/* 
+ 		 * Straightarrow Custom Modules
+		*/
+		'App\Straightarrow\Modules\Auth\AuthServiceProvider',
+		'App\Straightarrow\Modules\Token\TokenServiceProvider',
+		'App\Straightarrow\Modules\Profile\ProfileServiceProvider'
 	],
 
 	/*
@@ -200,7 +208,8 @@ return [
 		'Input' => 'Illuminate\Support\Facades\Input::class',
 		'Html5' => 'Illuminate\Html\HtmlFacade',
 		'Form' => 'Illuminate\Html\FormFacade',
-		'Helper' => 'App\Helpers\Helper::class'
+		'Helper' => 'App\Helpers\Helper::class',
+		//'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
 
 	],
 

@@ -28,7 +28,7 @@
   </p>
 
 
-  <h4 id="clone-project"><b>2. Clone ValeDate Repository</b></h4>
+  <h4 id="clone-project"><b>2. Clone Vindicoapp Repository</b></h4>
   <hr>
   <ol>
     <li>
