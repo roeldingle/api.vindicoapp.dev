@@ -71,24 +71,43 @@ class SearchController extends Controller {
 	public function getSearchItems(){
 
 
-		$iTemId = Input::get('item_id');
-		$aGroupIds = json_decode(Input::get('group_ids'));//explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
-		$aItem = DB::table('items')
-			->select('id','location_id','brand_id','area')
-			->where('id',$iTemId)
-			->get();
+		//$iTemId = Input::get('item_id');
+		$aItem = array();
 
-		$aItemValues = DB::table('item_value')
-			->select('groups.group_name','subgroups.subgroup_name','item_value.value')
-			->join('subgroups', 'subgroups.id', '=', 'item_value.subgroup_id')
-			->join('groups', 'groups.id', '=', 'subgroups.group_id')
-			->whereIn('groups.id',$aGroupIds)
-			->where('item_id',$iTemId)
-			->get();
+		if(null !== $iTemId = Input::get('item_id')){
 
-		array_push($aItem, $aItemValues);
+			$aGroupIds = json_decode(Input::get('group_ids'));
+			$aItem = DB::table('items')
+				->select('id','location_id','brand_id','area')
+				->where('id',$iTemId)
+				->get();
 
-		return $aItem;
+			$aItemValues = DB::table('item_value')
+				->select('groups.group_name','subgroups.subgroup_name','item_value.value')
+				->join('subgroups', 'subgroups.id', '=', 'item_value.subgroup_id')
+				->join('groups', 'groups.id', '=', 'subgroups.group_id')
+				->whereIn('groups.id',$aGroupIds)
+				->where('item_id',$iTemId)
+				->get();
+
+			 array_push($aItem, $aItemValues);
+
+			 $sMessage = "Success, data item retrieved";
+			 $iStatusCode = 200;
+
+
+		}else{
+			$aItem = [];
+			$sMessage = "No item id set, please set item_id as parameter";
+			$iStatusCode = 204;
+		}
+		
+		$aReturnData = array(
+ 	    	'message' => $sMessage,
+ 	    	'data' => $aItem 
+ 	    );
+
+		return Response::json($aReturnData,$iStatusCode);
 		
 	}
 

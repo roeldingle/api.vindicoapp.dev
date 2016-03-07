@@ -85,7 +85,7 @@ class EloquentAuth implements AuthInterface
     $data['password'] = bcrypt($data['password']);
 
     $result = $this->auth->create($data);
-
+    /*
     $meta_fields = ['about_me', 'gender', 'first_name', 'middle_name', 'last_name', 'locale', 'timezone', 'date_of_birth', 'updated_time', 'status', 'longitude', 'latitude', 'location', 'age', 'photo'];
 
     foreach($meta_fields as $field) {
@@ -96,6 +96,9 @@ class EloquentAuth implements AuthInterface
       ];
     }
     DB::table('user_meta')->insert($_fields);
+    */
+    
+    //DB::table('users')->insert($result);
 
     return $result;
   }

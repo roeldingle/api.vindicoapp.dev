@@ -71,47 +71,6 @@
       </td>
     </tr>
 
-    <tr>
-      <td>
-        grant_type
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String (system constant)
-        <p>
-          <b>Value : </b> password
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        client_id
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String (system constant)
-        <p>
-          <b>Value : </b> vindicoapp
-        </p>
-      </td>
-    </tr>
-
-    <tr>
-      <td>
-        client_secret
-        <span class="text-muted">required</span>
-      </td>
-      <td>
-        String (system constant)
-        <p>
-          <b>Value : </b> password123
-        </p>
-      </td>
-    </tr>
-
-    
-
   </table>
 
   <h4>Example Request</h4>
@@ -123,13 +82,9 @@
   <h5>Example Response</h5>
   <pre>
     {
-      "is_logged_in": true,
-      "message": "Loggin successful",
-      "data": {
-        "access_token": "Kvxlic009mcpqLQtjSE1YlUcgDP5YQFffLOkC549",
-        "token_type": "Bearer",
-        "expires_in": 604800
-      }
+      "status": true,
+      "message": "Successfully login",
+      "token": "MC42MDg1ODYwMCAxNDU3MzQ3ODQyLTMyLTN5cFBZWDRtZ0tWTVY1eVV6UWVqUDNKemQ3NEdUb1pJ"
     }
   </pre>
 
@@ -173,8 +128,8 @@
   <h5>Example Response</h5>
   <pre>
     {
-      "is_logged_out": true,
-      "message": "Logout successful"
+      "status": true,
+      "message": "Successfully logged out."
     }
   </pre>
 

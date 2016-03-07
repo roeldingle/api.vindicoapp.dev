@@ -33,11 +33,11 @@ class AuthController extends BaseApiController
     
     $isAuthenticated = $this->authGateway->login(Input::all());
     if($isAuthenticated['valid']){
-      $response = ['status' => $isAuthenticated['valid'] ,'token' => $isAuthenticated['token']];
+      $response = ['status' => $isAuthenticated['valid'] , 'message' => 'Successfully login', 'token' => $isAuthenticated['token']];
       return Response::json($response, 200);
     }else{
       //check if there's a validation errors else the credentials is invalid
-      $response = ['status' => $isAuthenticated['valid'] ,'error' => $isAuthenticated['error']];
+      $response = ['status' => $isAuthenticated['valid'], 'message' => 'Error logging in' ,'error' => $isAuthenticated['error']];
       return Response::json($response, 422);
     }
   }
@@ -54,6 +54,8 @@ class AuthController extends BaseApiController
 
     $validator = $this->validator->isValidEmail(Input::all());
 
+
+
     if(!$validator) {
       $errors = $this->validator->errors()->first();
       return Response::json(['status'=>$validator,'error'=>$errors], 422);
@@ -63,6 +65,8 @@ class AuthController extends BaseApiController
 
 
     $status = $this->authGateway->changepassword(['email'=>$email,'password'=>$pwd]);
+
+
 
     if(!$status['valid']) {
       return Response::json(['status'=>false,'error'=>$status['error']], 422);
@@ -84,8 +88,8 @@ class AuthController extends BaseApiController
     ';
 
     Mail::send([], ['html'=>$html], function ($message) use($html) {
-        $message->from('web2sign@yahoo.com', 'Roy Vincent Niepes');
-        $message->to('web2sign@gmail.com')->subject('Here\'s your New Password');
+        $message->from('rmdingle@straightarrow.com.ph', 'Roy Vincent Niepes');
+        $message->to('rmdingle@straightarrow.com.ph')->subject('Here\'s your New Password');
         $message->setBody($html,'text/html');
     });
 
@@ -103,13 +107,11 @@ class AuthController extends BaseApiController
   public function getLogout()
   {
     $token = Request::header('X-Auth-Token');
-
-
     
     $isLoggedOut = $this->authGateway->logout($token);
 
     if($isLoggedOut['valid']){
-      $response = ['status' => $isLoggedOut['valid'], 'message' => $isLoggedOut['message']];
+      $response = ['status' => $isLoggedOut['valid'],  'message' => $isLoggedOut['message']];
       return Response::json($response, 200);
     }else{
        $response = ['status' => $isLoggedOut['valid'],'error' => $isLoggedOut['error']];

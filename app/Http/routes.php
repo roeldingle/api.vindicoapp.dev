@@ -47,6 +47,7 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 
 			Route::get('login',function(){
 				return ['email'=>'sample@yahoo.com','password'=>'*****'];
+				//return Hash::make('password');
 			});
 			
 		    Route::post('login',[
@@ -76,8 +77,6 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 					'first_name' => 'John',
 					'middle_name' => 'D',
 					'last_name' => 'Doe',
-					'gender' => 1,
-					'about_me' => 'secret'
 				];
 			}); 
 
@@ -102,7 +101,7 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 
 });
 
-
+/*
 Route::group([
     'prefix'    =>  'docs'
 ],function(){
@@ -121,4 +120,27 @@ Route::group([
         Route::get('authentication',function(){  return View::make('docs.v1.authentication'); });
         Route::get('checkout',function(){  return View::make('docs.v1.checkout'); });
     });
+});
+*/
+
+
+/*docs*/
+Route::group(['prefix' => 'docs/v1'], function(){
+
+	Route::get('/', ['as' => 'doc.v1.index', function(){
+		return View::make('docs.v1.index');
+	}]);
+
+	Route::get('installation', ['as' => 'doc.v1.installation', function(){
+		return View::make('docs.v1.installation');
+	}]);
+
+	Route::get('register', ['as' => 'doc.v1.register', function(){
+		return View::make('docs.v1.register');
+	}]);
+
+	Route::get('authentication', ['as' => 'doc.v1.authentication', function(){
+		return View::make('docs.v1.authentication');
+	}]);
+
 });
