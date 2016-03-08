@@ -29,12 +29,9 @@ class SearchController extends Controller {
 	 */
 	public function getSearch()
 	{
-
 		$sSearch = Input::get('search_category');
 
-
 		if(null !== $sSearchSpecific = Input::get('search_specific')){
-			;
 
 			if($aItems = DB::table($sSearch)->select($sSearchSpecific)->get()){
 				$sMessage = "Search success";
@@ -45,27 +42,26 @@ class SearchController extends Controller {
 			}
 
 		}else{
-			$aItems = DB::table($sSearch)->get();
 
-			if($sSearchSpecific){
+			if(null !== $sSearch){
+				$aItems = DB::table($sSearch)->get();
 				$sMessage = "Search success";
 				$iStatusCode = 200;
 			}else{
 				$sMessage = "Please check search parameter";
 				$iStatusCode = 400;
 			}
+
 		}
 		
- 	    $aReturnData = array(
- 	    	'message' => $sMessage,
- 	    	'data' => $aItems 
- 	    );
+		    $aReturnData = array(
+		    	'message' => $sMessage,
+		    	'data' => $aItems 
+		    );
 
 		return Response::json($aReturnData,$iStatusCode);
 
-
 	}
-
 	
 
 	/**
@@ -81,27 +77,49 @@ class SearchController extends Controller {
 	public function getSearchItems(){
 
 
-		$iTemId = Input::get('item_id');
+		$iLocationId = Input::get('location_id');
+		$iBrandId = Input::get('brand_id');
+		$iArea = Input::get('area');
+		$aGroupIds = json_encode(Input::get('group_ids'));
+
+		$aItems = array();
+		$aItemValues = array();
+
+
+
 		$aGroupIds = explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
 		$aItem = DB::table('items')
 			->select('id','location_id','brand_id','area')
-			->where('id',$iTemId)
+			->where('location_id',$iLocationId)
+			->where('brand_id',$iBrandId)
+			->whereBetween('area',array(150,160))
 			->get();
 
-		$aItemValues = DB::table('item_value')
-			->select('groups.group_name','subgroups.subgroup_name','item_value.value')
-			->join('subgroups', 'subgroups.id', '=', 'item_value.subgroup_id')
+
+		foreach($aItem as $item){
+
+			$aItemValue = DB::table('items_value')
+			->select('groups.group_name','subgroups.subgroup_name','items_value.value')
+			->join('subgroups', 'subgroups.id', '=', 'items_value.subgroup_id')
 			->join('groups', 'groups.id', '=', 'subgroups.group_id')
 			->whereIn('groups.id',$aGroupIds)
-			->where('item_id',$iTemId)
+			->where('item_id',$item->id)
 			->get();
 
-		array_push($aItem, $aItemValues);
+			array_push($aItemValues, $aItemValue);
+		}
 
-		return $aItem;
+		$aReturnData = array(
+	    	'message' => "yes",
+	    	'data' => array(
+	    			'search-list-count' => count($aItemValues),
+	    			'search-list' => $aItemValues
+	    		)
+	    );
+
+
+		return $aReturnData;
 		
 	}
-
-	
 
 }

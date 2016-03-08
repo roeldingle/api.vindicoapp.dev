@@ -86,7 +86,7 @@ class EloquentAuth implements AuthInterface
 
     $result = $this->auth->create($data);
     /*
-    $meta_fields = ['about_me', 'gender', 'first_name', 'middle_name', 'last_name', 'locale', 'timezone', 'date_of_birth', 'updated_time', 'status', 'longitude', 'latitude', 'location', 'age', 'photo'];
+    $meta_fields = ['first_name', 'Last_name', 'first_name', 'middle_name', 'last_name', 'locale', 'timezone', 'date_of_birth', 'updated_time', 'status', 'longitude', 'latitude', 'location', 'age', 'photo'];
 
     foreach($meta_fields as $field) {
       $_fields[] = [
@@ -99,6 +99,17 @@ class EloquentAuth implements AuthInterface
     */
     
     //DB::table('users')->insert($result);
+
+    $meta_fields = ['first_name', 'last_name'];
+
+    foreach($meta_fields as $field) {
+      $_fields[] = [
+        'user_id'     =>  $result->id,
+        'meta_key'    =>  $field,
+        'meta_value'  =>  isset($data[$field]) ? $data[$field] : ''
+      ];
+    }
+    DB::table('user_meta')->insert($_fields);
 
     return $result;
   }

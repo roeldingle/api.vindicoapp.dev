@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder {
     DB::table('users')->delete();
     //insert some dummy records
     DB::table('users')->insert(array(
-      array('name'=>'test','email'=>'test@test.com','password'=>Hash::make('password'))            
+      array('name'=>'Test','email'=>'test@test.com','password'=>Hash::make('password'))            
     ));
     $this->command->info('User table seeded!');
 
@@ -143,15 +143,6 @@ class DatabaseSeeder extends Seeder {
     $this->command->info('Locations table seeded!');
 
 
-    /******************oauth_clients table************************/
-    //delete oauth_clients table records
-    DB::table('oauth_clients')->delete();
-    //insert some dummy records
-    DB::table('oauth_clients')->insert(array(
-      array('id'=>'vindicoapp','secret'=>'password123','name'=>'vindico')            
-    ));
-    $this->command->info('oauth_clients seeded!');
-    // $this->call('UserTableSeeder');
 	}
 
 }

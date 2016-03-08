@@ -14,10 +14,13 @@ class CreateSubgroupTable extends Migration {
 	{
 		Schema::create('subgroups', function(Blueprint $table){
 			$table->increments('id');
-			$table->string('group_id');
+			$table->integer('group_id')->unsigned()->nullable();
 			$table->string('subgroup_name');
-			$table->timestamps();
 		});
+
+		Schema::table('subgroups', function($table) {
+	       $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+	   });
 	}
 
 

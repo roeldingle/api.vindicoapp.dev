@@ -23,7 +23,7 @@ class SearchController extends Controller {
 	public function getSearch()
 	{
 
-		$sSearch = Input::get('search_category');
+		
 
 		if(null !== $sSearchSpecific = Input::get('search_specific')){
 
@@ -37,7 +37,8 @@ class SearchController extends Controller {
 
 		}else{
 
-			if($aItems = DB::table($sSearch)->get()){
+			if($sSearch = Input::get('search_category')){
+				$aItems = DB::table($sSearch)->get();
 				$sMessage = "Search success";
 				$iStatusCode = 200;
 			}else{
