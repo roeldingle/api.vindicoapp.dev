@@ -94,6 +94,10 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 		    Route::get('search','SearchController@getSearch');
 		    Route::get('search-item','SearchController@getSearchItems');
 
+		    Route::resource('reports','ReportsController');
+
+		    Route::patch('reports-update','ReportsController@update');
+
 		});
 
 

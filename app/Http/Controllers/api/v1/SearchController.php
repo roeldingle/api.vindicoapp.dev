@@ -2,23 +2,15 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use \App\User as User;
-use DB;
 use App\Helpers\Helper;
+use DB;
 use Response;
-//use LucaDegasperi\OAuth2Server\Authorizer;
 
 class SearchController extends Controller {
-
-
-	public function index()
-	{
-		
-	}
 
 	/**
 	 * Display a listing of the resource.
@@ -70,26 +62,22 @@ class SearchController extends Controller {
 	 *
 	 * access_token
 	 * item_id - (int) 1
-	 * group_ids - (string) '[1,2,5]'
+	 * group_id - (string) '[1,2,5]'
 	 * 
 	 * 
 	 * @return Response
 	 */
 	public function getSearchItems(){
 
-
 		$iLocationId = Input::get('location_id');
 		$iBrandId = Input::get('brand_id');
 		$aAreaRange = json_decode(Input::get('area'));
-		$aGroupIds = json_decode(Input::get('group_ids'));
+		$aGroupIds = json_decode(Input::get('group_id'));
 
 		$aItems = array();
 		$aItemValues = array();
 		$aResultAve = array();
 
-
-
-		//$aGroupIds = explode(",", Input::get('group_ids'));//[1,2,3];// Input::get('group_ids');
 		$aItem = DB::table('items')
 			->select('id','location_id','brand_id','area')
 			->where('location_id',$iLocationId)
@@ -97,11 +85,10 @@ class SearchController extends Controller {
 			->whereBetween('area',$aAreaRange)
 			->get();
 
-
 		foreach($aItem as $item){
 
 			$aItemValue = DB::table('items_value')
-			->select('groups.id','groups.group_name','subgroups.subgroup_name','items_value.subgroup_id','items_value.value')
+			->select('items_value.id','items_value.item_id','groups.group_name','subgroups.subgroup_name','items_value.subgroup_id','items_value.value')
 			->join('subgroups', 'subgroups.id', '=', 'items_value.subgroup_id')
 			->join('groups', 'groups.id', '=', 'subgroups.group_id')
 			->whereIn('groups.id',$aGroupIds)
@@ -123,55 +110,15 @@ class SearchController extends Controller {
 	    		)
 	    );
 
-
 		return $aReturnData;
 		
 	}
 
-	public function getItemsAverage($array){
-
-		//dd($array);
-		return self::array_average_by_key($array);
-	}
-
-
-	 public function array_average_by_key( $arr )
+	public function getItemsAverage($array)
 	{
-	    $sums = array();
-	    $counts = array();
-	    foreach( $arr as $k => &$v )
-	    {
-
-			foreach( $v as $sub_k => $sub_v )
-	        {
-	            if( !array_key_exists( $sub_k, $counts ) )
-	            {
-	                $counts[$sub_k] = 0;
-	                $sums[$sub_k]   = 0;
-	            }
-
-	            
-	            $sub_value = $sub_v->value;
-	            
-
-	            $counts[$sub_k]++;
-	            $sums[$sub_k]  += (float) $sub_value;
-
-	        }
-	        
-	    }
-	    $avg = array();
-
-	    foreach( $sums as $k => $v )
-	    {
-	        $avg[$k] = $v / $counts[$k];
-	    }
-	    return $avg;
+		$aGroupIdWithUniqueCondition = array(15,16,17,18,19,20,21,22,23,24,25,26);
+		return Helper::array_average_by_key($aGroupIdWithUniqueCondition,$array);
 	}
-
-
-	
-
 
 	
 

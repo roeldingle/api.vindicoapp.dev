@@ -209,7 +209,7 @@ return [
 		'Input' => 'Illuminate\Support\Facades\Input::class',
 		'Html5' => 'Illuminate\Html\HtmlFacade',
 		'Form' => 'Illuminate\Html\FormFacade',
-		'Helper' => 'App\Helpers\Helper::class',
+		'Helper' => 'App\Helpers\Helper',
 		//'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
 
 	],
