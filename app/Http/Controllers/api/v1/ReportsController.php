@@ -128,6 +128,7 @@ class ReportsController extends BaseApiController {
 	{
 
 		$userId = parent::getUserId();
+		$reports = Reports::findOrFail($id);
 
 		$input = array(
 			'location_id' => $request->get('location_id'),
@@ -137,7 +138,7 @@ class ReportsController extends BaseApiController {
 		);
 
 
-		$bUpdated = Reports::update($input);
+		$bUpdated = $reports->update($input);
 
 		if($bUpdated){
 			$bStatus = true;
@@ -167,9 +168,27 @@ class ReportsController extends BaseApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function delete(CreateReportsRequest $request)
 	{
-		//
+		$userId = parent::getUserId();
+		//$reports = Reports::findOrFail($id);
+
+		$aReportIdToDelete = json_decode($request->get('report_id'));
+
+		$bDeleted = Reports::destroy($aReportIdToDelete);
+
+		$bStatus = true;
+		$sMessage = "Deleted successfully";
+		$iStatusCode = 201;
+
+		$aReturnData = array(
+			'status' => $bStatus,
+	    	'message' => $sMessage
+	    );
+
+		return Response::json($aReturnData,$iStatusCode);
 	}
+
+	
 
 }

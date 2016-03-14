@@ -11,20 +11,6 @@
 |
 */
 
-#Route::get('/', 'WelcomeController@index');
-
-Route::get('/', 'WelcomeController@index');
-
-Route::any('auth/register','WelcomeController@index');
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);
-
-
-
-
 Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 
 	Route::get('/',function(){
@@ -38,7 +24,7 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 		}); /* defaultview */
 
 		
-
+		/************************** Using auth path *******************************/
 		Route::group(['prefix'=>'auth'],function(){
 
 			Route::get('/',function(){
@@ -69,17 +55,6 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 			    'uses'  => 'AuthController@getLogout'
 		    ]);
 
-
-			Route::get('register',function(){
-				return [
-					'email'=>'sample@yahoo.com',
-					'password'=>'*****',
-					'first_name' => 'John',
-					'middle_name' => 'D',
-					'last_name' => 'Doe',
-				];
-			}); 
-
 		    Route::post('register',[
 		    	'as' 	=> 'api.v1.auth.register',
 		    	'uses'  => 'AuthController@postRegister'
@@ -88,15 +63,16 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 		});
 	
 
-		/************************** Search Controller *******************************/
+		/************************** Using middleware api.access *******************************/
 		Route::group(['middleware' => 'api.access'],function(){
-		  
+
+	  		/************************** Search Controller *******************************/
 		    Route::get('search','SearchController@getSearch');
 		    Route::get('search-item','SearchController@getSearchItems');
 
+			/************************** Search Controller *******************************/
 		    Route::resource('reports','ReportsController');
-
-		    Route::patch('reports-update','ReportsController@update');
+		    Route::get('reports-delete','ReportsController@delete');
 
 		});
 
@@ -104,28 +80,6 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 	});
 
 });
-
-/*
-Route::group([
-    'prefix'    =>  'docs'
-],function(){
-
-    Route::get('/',function(){
-        return '';
-    });
-
-    Route::group([
-        'prefix'    =>  'v1'
-    ],function(){
-        Route::get('/',function(){ return View::make('docs.v1.documentation'); });
-        Route::get('installation',function(){  return View::make('docs.v1.installation'); });
-        Route::get('reference',function(){  return View::make('docs.v1.reference'); });
-        Route::get('profile',function(){  return View::make('docs.v1.profile'); });
-        Route::get('authentication',function(){  return View::make('docs.v1.authentication'); });
-        Route::get('checkout',function(){  return View::make('docs.v1.checkout'); });
-    });
-});
-*/
 
 
 /*docs*/
