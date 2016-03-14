@@ -72,7 +72,7 @@ Route::group(['prefix'=>'api', 'namespace' => 'api\v1'],function(){
 
 			/************************** Search Controller *******************************/
 		    Route::resource('reports','ReportsController');
-		    Route::get('reports-delete','ReportsController@delete');
+		    Route::get('delete-report','ReportsController@delete');
 
 		});
 
@@ -100,5 +100,14 @@ Route::group(['prefix' => 'docs/v1'], function(){
 	Route::get('authentication', ['as' => 'doc.v1.authentication', function(){
 		return View::make('docs.v1.authentication');
 	}]);
+
+	Route::get('search', ['as' => 'doc.v1.search', function(){
+		return View::make('docs.v1.search');
+	}]);
+
+	Route::get('reports', ['as' => 'doc.v1.reports', function(){
+		return View::make('docs.v1.reports');
+	}]);
+
 
 });

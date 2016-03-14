@@ -20,8 +20,6 @@ class ReportsController extends BaseApiController {
 	public function index()
 	{
 
-
-
 		$userId = parent::getUserId();
 		$user = User::findOrFail($userId);
 		$reports = $user->reports;
@@ -102,13 +100,23 @@ class ReportsController extends BaseApiController {
 	{
 
 		$reports = Reports::findOrFail($id);
-		$bStatus = true;
-		$iStatusCode = 200;
+		$userId = parent::getUserId();
 
+		
+		if($userId === $reports->user_id){
+			$bStatus = true;
+			$sMessage = 'Report found';
+			$iStatusCode = 200;
+		}else{
+			$bStatus = true;
+			$sMessage = 'You cannot view this report';
+			$iStatusCode = 204;
+		}
 
 
 		$aReturnData = array(
 			'status' => $bStatus,
+			'message' => $sMessage,
 			'data' => array(
 				'reports' => $reports
 			)
@@ -127,8 +135,9 @@ class ReportsController extends BaseApiController {
 	public function update(CreateReportsRequest $request, $id)
 	{
 
-		$userId = parent::getUserId();
+
 		$reports = Reports::findOrFail($id);
+		$user = User::findOrFail(parent::getUserId());
 
 		$input = array(
 			'location_id' => $request->get('location_id'),
@@ -137,25 +146,30 @@ class ReportsController extends BaseApiController {
 			'search_group' => $request->get('search_group')
 		);
 
+		if($userId === $reports->user_id){
 
-		$bUpdated = $reports->update($input);
-
-		if($bUpdated){
-			$bStatus = true;
-			$sMessage = "Updated successfully";
-			$iStatusCode = 201;
-
+			if($bUpdated = $reports->update($input)){
+				$bStatus = true;
+				$sMessage = "Updated successfully";
+				$iStatusCode = 201;
+			}else{
+				$bStatus = false;
+				$sMessage = "Error updating";
+				$iStatusCode = 500;
+			}
+			
+			
 		}else{
 			$bStatus = false;
-			$sMessage = "Error updating";
-			$iStatusCode = 500;
-
+			$sMessage = "Cannot update this report";
+			$iStatusCode = 201;
 		}
-	
+
 		$aReturnData = array(
 			'status' => $bStatus,
 	    	'message' => $sMessage
 	    );
+
 
 		return Response::json($aReturnData,$iStatusCode);
 		
@@ -170,21 +184,36 @@ class ReportsController extends BaseApiController {
 	 */
 	public function delete(CreateReportsRequest $request)
 	{
+		
+		$iReportIdToDelete = $request->get('report_id');
+		$reports = Reports::findOrFail($iReportIdToDelete);
 		$userId = parent::getUserId();
-		//$reports = Reports::findOrFail($id);
 
-		$aReportIdToDelete = json_decode($request->get('report_id'));
 
-		$bDeleted = Reports::destroy($aReportIdToDelete);
+		if($userId === $reports->user_id){
 
-		$bStatus = true;
-		$sMessage = "Deleted successfully";
-		$iStatusCode = 201;
+			if($bDeleted = Reports::destroy($iReportIdToDelete)){
+				$bStatus = true;
+				$sMessage = "Deleted successfully";
+				$iStatusCode = 200;
+			}else{
+				$bStatus = false;
+				$sMessage = "Error deleting";
+				$iStatusCode = 500;
+			}
+			
+			
+		}else{
+			$bStatus = false;
+			$sMessage = "Cannot delete this report";
+			$iStatusCode = 201;
+		}
 
 		$aReturnData = array(
 			'status' => $bStatus,
 	    	'message' => $sMessage
 	    );
+
 
 		return Response::json($aReturnData,$iStatusCode);
 	}

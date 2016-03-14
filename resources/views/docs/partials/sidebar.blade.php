@@ -57,6 +57,34 @@
 
 	</a>
 
+	@if(Request::segment('3') == 'search')
+
+	<a href="{{ URL::route('doc.v1.search') }}" class="list-group-item active">
+
+	@else
+
+	<a href="{{ URL::route('doc.v1.search') }}" class="list-group-item">
+
+	@endif
+
+	Search
+
+	</a>
+
+	@if(Request::segment('3') == 'reports')
+
+	<a href="{{ URL::route('doc.v1.reports') }}" class="list-group-item active">
+
+	@else
+
+	<a href="{{ URL::route('doc.v1.reports') }}" class="list-group-item">
+
+	@endif
+
+	Reports
+
+	</a>
+
 	
 
 

@@ -57,7 +57,7 @@ class AuthValidation
   
     
     $validator = $this->validator->make($input,[
-        //'username'  =>  'required|min:6|unique:users|Regex:/^[A-Za-z0-9\- ,\'\"\\.:\(\)]+$/',
+        'username'  =>  'required|min:6|unique:users|Regex:/^[A-Za-z0-9\- ,\'\"\\.:\(\)]+$/',
         'email'     =>  'required|unique:users|email',
         'password'  =>  'required|min:6|Regex:/^\S*$/',
         //'name'      =>  'required|min:6|Regex:/^[A-Za-z0-9\- ,\'\"\\.:\(\)]+$/',

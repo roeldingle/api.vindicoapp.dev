@@ -16,12 +16,12 @@ class DatabaseSeeder extends Seeder {
 
     /******************users table************************/
     //delete users table records
-    DB::table('users')->delete();
+    //DB::table('users')->delete();
     //insert some dummy records
-    DB::table('users')->insert(array(
-      array('name'=>'Test','email'=>'test@test.com','password'=>Hash::make('password'))            
-    ));
-    $this->command->info('User table seeded!');
+    //DB::table('users')->insert(array(
+    //  array('username'=>'Test','email'=>'test@test.com','password'=>Hash::make('password'))            
+   // ));
+    //$this->command->info('User table seeded!');
 
     /******************groups table************************/
     //delete groups table records

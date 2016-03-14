@@ -45,13 +45,25 @@
     <table class="table table-hovered table-striped">
         <tr>
             <td>
+                username
+                <span class="text-muted">required</span>
+            </td>
+            <td>
+                The username of the user
+                <p>
+                  <b>Example Values : </b> testuser
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 email
                 <span class="text-muted">required</span>
             </td>
             <td>
                 The email address of the user
                 <p>
-                    <b>Example Values : </b> cleo@straightarrow.com.ph
+                    <b>Example Values : </b> test@test.com
                 </p>
             </td>
         </tr>
@@ -69,7 +81,7 @@
             </td>
         </tr>
 
-        <tr>
+        <!-- <tr>
             <td>
                 confirm_password
                 <span class="text-muted">required</span>
@@ -80,7 +92,7 @@
                   <b>Example Values : </b> *******
                 </p>
             </td>
-        </tr>
+        </tr> -->
 
         <tr>
             <td>
@@ -90,7 +102,7 @@
             <td>
                 The first name of the user
                 <p>
-                  <b>Example Values : </b> Cleo
+                  <b>Example Values : </b> Juan
                 </p>
             </td>
         </tr>
@@ -103,23 +115,12 @@
             <td>
                 The last name of the user
                 <p>
-                  <b>Example Values : </b> Aceron
+                  <b>Example Values : </b> Cruz
                 </p>
             </td>
         </tr>
 
-        <tr>
-            <td>
-                username
-                <span class="text-muted">required</span>
-            </td>
-            <td>
-                The username of the user
-                <p>
-                  <b>Example Values : </b> cleo.aceron
-                </p>
-            </td>
-        </tr>
+        
 
        
 
@@ -134,8 +135,9 @@
     <pre>
     [
         {
-            "status_code": true,
-            "token": "$2y$10$0l5ltRBKs7Flu9cN076Diez/ImeRkuD8I0hYVeX7WBi4L8jSQrBsa"
+          "status": true,
+          "message": "Registered successfully",
+          "token": "MC45NjAyNDAwMCAxNDU3OTM2MzEzLTYtM3lwUFlYNG1nS1ZNVjV5VXpRZWpQM0p6ZDc0R1RvWkk="
         }
     ]
     </pre>

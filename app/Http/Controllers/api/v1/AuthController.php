@@ -128,11 +128,11 @@ class AuthController extends BaseApiController
   {
     $isRegistered = $this->authGateway->register(Input::all());
     if($isRegistered['valid']){
-      $response = ['status' => true, 'token' => $isRegistered['token']];
+      $response = ['status' => true, 'message' => 'Registered successfully', 'token' => $isRegistered['token']];
       return Response::json($response, 201);
 
     }else{
-      $response = ['status' => false, 'error' => $isRegistered['error']];
+      $response = ['status' => false, 'message' => 'Registration failed', 'error' => $isRegistered['error']];
       return Response::json($response, 422);
     }
   }

@@ -46,11 +46,14 @@ class SearchController extends Controller {
 			}
 
 		}
+		/*get only the values*/
+		//list($keys, $values) = array_divide($aItems);
+
 		
-		    $aReturnData = array(
-		    	'message' => $sMessage,
-		    	'data' => $aItems 
-		    );
+	    $aReturnData = array(
+	    	'message' => $sMessage,
+	    	'data' => $aItems
+	    );
 
 		return Response::json($aReturnData,$iStatusCode);
 
@@ -71,7 +74,7 @@ class SearchController extends Controller {
 
 		$iLocationId = Input::get('location_id');
 		$iBrandId = Input::get('brand_id');
-		$aAreaRange = json_decode(Input::get('area'));
+		$aAreaRange = json_decode(Input::get('area_range'));
 		$aGroupIds = json_decode(Input::get('group_id'));
 
 		$aItems = array();
@@ -102,11 +105,11 @@ class SearchController extends Controller {
 		$aFinalResultAve = self::getItemsAverage($aItemValues);
 
 		$aReturnData = array(
-	    	'message' => "yes",
+	    	'status' => true,
 	    	'data' => array(
-	    			'search-list-count' => count($aItemValues),
-	    			'search-ave' => $aFinalResultAve,
-	    			'search-list' => $aItemValues
+	    			'search-list' => $aItemValues,
+	    			'search-ave' => $aFinalResultAve
+	    			
 	    		)
 	    );
 
