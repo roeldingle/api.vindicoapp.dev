@@ -91,7 +91,7 @@ class SearchController extends Controller {
 		foreach($aItem as $item){
 
 			$aItemValue = DB::table('items_value')
-			->select('items_value.id','items_value.item_id','groups.group_name','subgroups.subgroup_name','items_value.subgroup_id','items_value.value')
+			->select('items_value.id','items_value.item_id','groups.id as group_id','groups.group_name','subgroups.subgroup_name','items_value.subgroup_id','items_value.value')
 			->join('subgroups', 'subgroups.id', '=', 'items_value.subgroup_id')
 			->join('groups', 'groups.id', '=', 'subgroups.group_id')
 			->whereIn('groups.id',$aGroupIds)
@@ -101,20 +101,43 @@ class SearchController extends Controller {
 			array_push($aItemValues, $aItemValue);
 		}
 
+		/*test only*/
+		$aFinalResultAve2 = self::getItemsAverage2($aGroupIds,$aItemValues);
 
 		$aFinalResultAve = self::getItemsAverage($aItemValues);
 
 		$aReturnData = array(
 	    	'status' => true,
 	    	'data' => array(
-	    			'search-list' => $aItemValues,
-	    			'search-ave' => $aFinalResultAve
+	    			
+	    		//'count' => count($aItemValues),
+	    		'search-ave' => $aFinalResultAve,
+	    		//'search-ave2' => $aFinalResultAve2,
+	    		'search-list' => $aItemValues
 	    			
 	    		)
 	    );
 
 		return $aReturnData;
+
+
 		
+	}
+
+	public function getItemsAverage2($aGroupIds,$array)
+	{
+		$return = array();
+
+		//vd($array);
+
+		foreach($array as $key=>$group){
+			if($group === 5){
+				$return[$key] = $group;
+			}
+			
+		}
+
+		return $return;
 	}
 
 	public function getItemsAverage($array)

@@ -38,38 +38,22 @@ class AuthGateway
 
       $login_with = isset($data['use']) ? $data['use'] : 'email';
 
-
-      switch($login_with) {
-        case "facebook": /* use facebook to login */
-
-          $facebook_id = isset($data['facebook_id']) ? $data['facebook_id'] : '';
-
-          if(!$facebook_id) {
-            return ['valid'=>false,'error'=>'Invalid Credentials.'];
-          }
-
-          $user = $this->authRepository->findByFacebook($data['facebook_id'], $columns);
+       if($this->validation->isValidForLogin($data)) {
+            
+        //$user = $this->authRepository->findByEmail($data, $columns);
+        $user = $this->authRepository->findByUsername($data, $columns);
 
 
-          //check if the user doesn't exist else register the user
-          if(empty( $user ) || $user == null) {
-            /* validate fields before creating the user */
-            $data['password'] = isset($data['password']) ? $data['password'] : rand() . 'abcd';
-            if($this->validation->isValidForRegister($data)) {
-              $user = $this->authRepository->create($data);
-              $user_id = $user->id;
-            } else {
-              $errors = $this->validation->errors()->getMessages();
-              return ['valid'=>false,'error'=>$this->validation->errors()->first()];
-            }
-          }
+        if( empty($user) ) {
+          return ['valid'=>false,'error'=>'Invalid Email or Password.'];
+        }
 
-          $user_id = isset($user_id) ? $user_id : $user->user_id;
+        $user_id = $user->id;
 
-          /* update user's data everytime he login using facebook to get the user's latest information */
-          $this->authRepository->update($data, $user_id);
+        if( $this->hasher->check($data['password'], $user->getAuthPassword()) ) {
 
           $token = base64_encode(("$time-$user_id-$key") );
+
 
           $event_data = [
             'user_id'     => $user_id,
@@ -81,60 +65,19 @@ class AuthGateway
 
           //fire the event "auth.login" this will register the API token details
           Event::fire('auth.login', [$event_data]);
-          $result = ['valid' => true, 'token' => $token];
-          return $result;
+          $this->authRepository->update(['status' => 1], $user_id);
+          return ['valid' => true, 'token' => $token];
+        } else {
+          return ['valid'=>false,'error'=>'Invalid Email or Password.'];
+        }
 
-        break;
-
-        case "twitter": /* use twitter to login */
-          return ['valid'=>false,'error'=>'Not available at the moment.'];
-        break;
-
-        case "google": /* use twitter to login */
-          return ['valid'=>false,'error'=>'Not available at the moment.'];
-        break;
-
-        default: /* use username or email to login */
-
-          if($this->validation->isValidForLogin($data)) {
-            
-            $user = $this->authRepository->findByEmail($data, $columns);
-
-            if( empty($user) ) {
-              return ['valid'=>false,'error'=>'Invalid Email or Password.'];
-            }
-
-            $user_id = $user->id;
-
-            if( $this->hasher->check($data['password'], $user->getAuthPassword()) ) {
-
-              $token = base64_encode(("$time-$user_id-$key") );
-
-
-              $event_data = [
-                'user_id'     => $user_id,
-                'api_token'   => $token,
-                'expired_at'  => Carbon::now()->addDays(Config::get('app.expiration')),
-                'created_at'  => Carbon::now(),
-                'updated_at'  => Carbon::now(),
-              ];
-
-              //fire the event "auth.login" this will register the API token details
-              Event::fire('auth.login', [$event_data]);
-              $this->authRepository->update(['status' => 1], $user_id);
-              return ['valid' => true, 'token' => $token];
-            } else {
-              return ['valid'=>false,'error'=>'Invalid Email or Password.'];
-            }
-
-          } else {
-            $errors = $this->validation->errors()->first();
-            return ['valid'=>false,'error'=>$errors];
-          }
-
-
-        break;
+      } else {
+        $errors = $this->validation->errors()->first();
+        return ['valid'=>false,'error'=>$errors];
       }
+
+
+      
   }
 
   public function logout($token)

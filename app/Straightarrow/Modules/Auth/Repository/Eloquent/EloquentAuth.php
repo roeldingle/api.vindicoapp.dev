@@ -58,7 +58,7 @@ class EloquentAuth implements AuthInterface
 
   public function findByUsername($value,array $columns){
 
-
+    return $this->auth->where('username',$value['username'])->first($columns);
   }
 
   

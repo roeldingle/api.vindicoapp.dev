@@ -68,7 +68,8 @@ class AuthValidation
 
   public function isValidForLogin($input) {
     $validator = $this->validator->make($input,[
-        'email'     =>  'required|email',
+        //'email'     =>  'required|email',
+        'username'     =>  'required',
         'password'  =>  'required|Regex:/^\S*$/',
       ]);
 

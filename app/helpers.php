@@ -55,6 +55,11 @@ class Helper{
 	    	}
 	        
 	    }
+
+
+	    
+
+	    
 	    return $avg;
 	}
 	

@@ -214,7 +214,7 @@
 
   <h4>Example Request</h4>
   <code>
-    GET http://www.api.vindicoapp.dev/api/v1/search-item?location_id=1&brand_id=8&area=[150,180]&group_id=[1,2,3]
+    GET http://www.api.vindicoapp.dev/api/v1/search-item?location_id=1&brand_id=8&area_range=[150,180]&group_id=[1,2,3]
   </code>
 
   <h5>Example Response</h5>

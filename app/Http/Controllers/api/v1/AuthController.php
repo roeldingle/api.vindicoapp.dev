@@ -88,7 +88,7 @@ class AuthController extends BaseApiController
     ';
 
     Mail::send([], ['html'=>$html], function ($message) use($html) {
-        $message->from('rmdingle@straightarrow.com.ph', 'Roy Vincent Niepes');
+        $message->from('des6sys@gmail.com', 'Roy Vincent Niepes');
         $message->to('rmdingle@straightarrow.com.ph')->subject('Here\'s your New Password');
         $message->setBody($html,'text/html');
     });
